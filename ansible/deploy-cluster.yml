@@ -1,0 +1,12 @@
+---
+- hosts: jump
+  gather_facts: no
+
+  vars_prompt:
+    - name: env_name
+      prompt: What environment do we deploy?
+      private: no
+
+  roles:
+    - ocp_install_ipi
+    #- openshift_install

@@ -1,0 +1,42 @@
+apiVersion: v1
+baseDomain: {{ ocp_install_ipi_base_domain }}
+#proxy:
+#  httpProxy: http://192.168.1.10:8080
+#  httpsProxy: http://192.168.1.10:8080
+#  noProxy: .changeme.corp
+controlPlane:
+  hyperthreading: Enabled
+  name: master
+  replicas: {{ ocp_install_ipi_master_count }}
+compute:
+- hyperthreading: Enabled
+  name: worker
+  replicas: {{ ocp_install_ipi_worker_count }}
+metadata:
+  name: "{{ ocp_install_ipi_cluster_name }}"
+networking:
+  machineNetwork:
+  - cidr: "{{ ocp_install_ipi_machine_cidr }}"
+  clusterNetwork:
+  - cidr: "{{ ocp_install_ipi_clusternetwork_cidr }}"
+    hostPrefix: {{ ocp_install_ipi_clusternetwork_hostprefix }}
+platform:
+  vsphere:
+    vcenter: "{{ ocp_install_ipi_vsphere_vcenter }}"
+    username: "{{ ocp_install_ipi_vsphere_username }}"
+    password: "{{ ocp_install_ipi_vsphere_password }}"
+    datacenter: "{{ ocp_install_ipi_vsphere_datacenter }}"
+    defaultDatastore: "{{ ocp_install_ipi_vsphere_datastore }}"
+    folder: "{{ ocp_install_ipi_vsphere_folder }}"
+    network: "{{ ocp_install_ipi_vsphere_network }}"
+    cluster: "{{ ocp_install_ipi_vsphere_cluster }}"
+    {% if ocp_install_ipi_cluster_osimage %}clusterOSImage: "{{ ocp_install_ipi_cluster_osimage }}"{% endif %}
+
+    apiVIP: "{{ ocp_install_ipi_api_vip }}"
+    ingressVIP: "{{ ocp_install_ipi_ingress_vip }}"
+    
+pullSecret: '{{ ocp_install_ipi_pull_secret }}'
+
+sshKey: '{{ ocp_install_ssh_key }}'
+
+imageContentSources: {{ ocp_install_image_content_sources | to_yaml }}

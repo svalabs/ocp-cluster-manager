@@ -1,0 +1,36 @@
+---
+ocp_install_ipi_install_dir: "{{ install_dir | default('ocp_install') }}"
+ocp_install_ipi_install_tmp_dir: "{{ install_tmp_dir | default(ocp_install_ipi_install_dir + '/cluster-' + ocp_install_ipi_cluster_name) }}"
+
+ocp_install_ipi_base_domain: "{{ base_domain | default('company.corp') }}"
+ocp_install_ipi_cluster_name: "{{ cluster_name | default('devocp') }}"
+
+ocp_install_ipi_master_count: "{{ master_count | default('3') }}"
+ocp_install_ipi_worker_count: "{{ worker_count | default('4') }}"
+
+ocp_install_ipi_api_vip: "{{ api_vip | default('10.42.1.9') }}"
+ocp_install_ipi_ingress_vip: "{{ ingress_vip | default('10.42.1.10') }}"
+ocp_install_ipi_machine_cidr: "{{ machine_cidr | default('10.0.0.0/16') }}"
+ocp_install_ipi_clusternetwork_cidr: "{{ clusternetwork_cidr | default('10.128.0.0/14') }}"
+ocp_install_ipi_clusternetwork_hostprefix: "{{ clusternetwork_hostprefix | default('23') }}"
+
+ocp_install_ipi_vsphere_vcenter: "{{ vsphere_vcenter | default('vc1.company.corp') }}"
+ocp_install_ipi_vsphere_username: "{{ vsphere_username | default('vsphereuser@COMPANY') }}"
+ocp_install_ipi_vsphere_password: "{{ vsphere_password | default('changeme') }}"
+ocp_install_ipi_vsphere_datacenter: "{{ vsphere_datacenter | default('DC1') }}"
+ocp_install_ipi_vsphere_datastore: "{{ vsphere_datastore | default('DS001') }}"
+ocp_install_ipi_vsphere_folder: "{{ vsphere_folder | default('/' + ocp_install_ipi_vsphere_datacenter + '/vm/'+ ocp_install_ipi_vsphere_foldername + '/') }}"
+ocp_install_ipi_vsphere_foldername: "{{ vsphere_foldername | default(ocp_install_ipi_cluster_name.upper()) }}"
+ocp_install_ipi_vsphere_network: "{{ vsphere_network | default('VLAN1234') }}"
+ocp_install_ipi_vsphere_cluster: "{{ vsphere_cluster | default('ESXDEV') }}"
+
+# to override URL to CoreOS OVA file
+ocp_install_ipi_cluster_osimage: "{{ cluster_osimage | default(False) }}"
+
+ocp_install_ssh_key: "{{ ssh_key | default('ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIt/Eem4Hnp6v55hF/Vp9YaS/4TuX5UjQ8hYV9MOaiKM jasper.wiegratz@sva.de') }}"
+ocp_install_ipi_pull_secret: "{{ pull_secret | default(' {\"auths\":{\"cloud.openshift.com\":{\"auth\":\"\",\"email\":\"ocp_engineer@example.com\"}}}') }}"
+
+ocp_install_image_content_sources: "{{ image_content_sources | default([]) }}"
+# - source: quay.io/openshift-release-dev/ocp-release
+#   mirrors:
+#   - registry.company.corp/openshift/openshift-release-dev
