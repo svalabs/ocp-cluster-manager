@@ -1,1 +1,6 @@
+# Temporary directories
 ocp_install/*
+
+# Ansible Vault
+vault_password
+vars/ocp-secrets.yml
