@@ -4,6 +4,10 @@ ocp_install_kubeconfig_to_home: true
 ocp_install_install_dir: "{{ install_dir | default('ocp_install') }}"
 ocp_install_install_tmp_dir: "{{ install_tmp_dir | default(ocp_install_install_dir + '/cluster-' + ocp_install_cluster_name) }}"
 
+ocp_install_openshift_install_command: "{{ ocp_install_install_dir }}/openshift-install"
+
+# install-config.yaml values
+
 ocp_install_base_domain: "{{ base_domain | default('company.corp') }}"
 ocp_install_cluster_name: "{{ cluster_name | default('devocp') }}"
 
