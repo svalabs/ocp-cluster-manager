@@ -1,0 +1,9 @@
+---
+
+- name: Include cluster environment variables
+  tags: [always]
+  include_vars:
+    file: "{{ item }}"
+  loop:
+    - "{{ env_vars_common_file }}"
+    - "{{ env_vars_env_file }}"

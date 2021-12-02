@@ -2,12 +2,16 @@
 - hosts: jump
   gather_facts: false
 
+  vars_files:
+    - vars/ocp-secrets.yml
+
   vars_prompt:
     - name: env_name
       prompt: What environment do we deploy?
       private: false
 
   roles:
+    - env_vars
     - ocp_install_binaries
     - ocp_install
     # - openshift_install

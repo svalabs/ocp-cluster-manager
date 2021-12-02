@@ -1,0 +1,6 @@
+---
+
+cluster_name: lab4
+api_vip: 10.1.4.1
+ingress_vip: 10.1.4.2
+vsphere_foldername: TiaB-MTA/LAB-4

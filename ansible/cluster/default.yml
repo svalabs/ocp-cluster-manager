@@ -1,0 +1,29 @@
+---
+
+ocp_variant: okd
+ocp_release: 4.9.0-0.okd-2021-11-28-035710
+
+
+# values for install-config.yaml
+base_domain: ocp.example.com
+# cluster_name: changeme
+
+master_count: 3
+worker_count: 2
+
+network_type: OpenShiftSDN
+# api_vip: 10.42.1.9
+# ingress_vip: 10.42.1.10
+machine_cidr: 10.0.0.0/16
+service_network: 172.30.0.0/16
+clusternetwork_cidr: 10.128.0.0/14
+clusternetwork_hostprefix: 23
+
+vsphere_vcenter: 10.100.135.50
+vsphere_username: vsphereadm@vsphere.local
+# vsphere_password: changeme  # to be set in vars/ocp-secrets.yml, encrypted!
+vsphere_datacenter: DC01
+vsphere_cluster: CL01
+vsphere_datastore: DS01
+vsphere_foldername: OCP-Lab  # path below DC, overwrite for each cluster
+vsphere_network: VLAN1010
