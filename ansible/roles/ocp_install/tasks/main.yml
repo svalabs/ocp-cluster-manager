@@ -1,0 +1,41 @@
+---
+
+# Generate install-config.yaml
+- name: Create install directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0700
+  loop:
+    - "{{ ocp_install_install_dir }}"
+    - "{{ ocp_install_install_tmp_dir }}"
+
+- name: Generate install-config.yaml
+  template:
+    src: 'install-config.yaml.j2'
+    dest: "{{ item }}"
+    mode: 0600
+  loop:
+    - "{{ ocp_install_install_dir }}/install-config-{{ ocp_install_cluster_name }}.yaml"
+    - "{{ ocp_install_install_tmp_dir }}/install-config.yaml"
+
+# Start cluster deployment
+- name: Info about cluster creation
+  debug:
+    msg: "You may follow the installation by viewing '{{ ocp_install_install_tmp_dir }}/.openshift_install.log' in another terminal window."
+
+- name: Run openshift-install
+  register: ocp_install_install_result
+  command:
+    creates: "{{ ocp_install_install_tmp_dir }}/terraform.tfstate"  # prevents redeployment
+    cmd: "{{ ocp_install_install_dir }}/openshift-install --dir '{{ ocp_install_install_tmp_dir }}' create cluster --log-level=info"
+  # to run in background:
+  # async: 3600  # 60 minutes timeout
+  # poll: 0
+
+- name: Install new cluster's KUBECONFIG file
+  when: ocp_install_kubeconfig_to_home | bool
+  copy:
+    src: "{{ ocp_install_install_tmp_dir }}/auth/kubeconfig"
+    dest: "{{ lookup('env', 'HOME') }}/.kube/config"
+    mode: '0600'

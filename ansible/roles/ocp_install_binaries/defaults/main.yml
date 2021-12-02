@@ -1,0 +1,17 @@
+---
+ocp_install_binaries_dir: "{{ install_dir | default(playbook_dir + '/ocp_install') }}"
+ocp_install_binaries_ocp_variant: "{{ ocp_variant | default('okd') }}"  # or 'ocp'
+ocp_install_binaries_ocp_release: "{{ ocp_release | default('4.8.0-0.okd-2021-11-14-052418') }}"  # for OCP: e.g. 'stable-4.8'
+ocp_install_binaries_ocp_variants:
+  ocp:
+    # always use latest client
+    client_url: https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
+    installer_url: https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp_install_binaries_ocp_release }}\
+      /openshift-install-linux.tar.gz
+  okd:
+    client_url: https://github.com/openshift/okd/releases/download/{{ ocp_install_binaries_ocp_release }}\
+      /openshift-client-linux-{{ ocp_install_binaries_ocp_release }}.tar.gz
+    installer_url: https://github.com/openshift/okd/releases/download/{{ ocp_install_binaries_ocp_release }}\
+      /openshift-install-linux-{{ ocp_install_binaries_ocp_release }}.tar.gz
+
+ocp_install_binaries_current_config: "{{ ocp_install_binaries_ocp_variants[ocp_install_binaries_ocp_variant] }}"  # selects variant from variants dict

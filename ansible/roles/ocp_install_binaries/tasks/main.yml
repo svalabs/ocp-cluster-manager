@@ -1,0 +1,43 @@
+---
+
+- name: Create install directories
+  file:
+    path: "{{ ocp_install_binaries_dir }}"
+    state: directory
+    mode: 0700
+  register: ocp_install_dir_result
+
+- name: Getting version of downloaded openshift-install
+  shell:  # noqa 301
+    cmd: "{{  ocp_install_binaries_dir  }}/openshift-install version || true"
+  register: oc_install_version_stdout
+
+- name: Delete openshift-install if outdated
+  when: '"openshift-install " + ocp_install_binaries_ocp_release not in oc_install_version_stdout.stdout'
+  file:
+    path: "{{ ocp_install_binaries_dir }}/openshift-install"
+    state: absent
+
+- name: Check if binaries exist
+  loop: [oc, openshift-install]
+  stat:
+    path: "{{ ocp_install_binaries_dir }}/{{ item }}"
+  register: oc_install_stat_result
+
+- name: Download binaries
+  when: (oc_install_stat_result.results | map(attribute='stat.exists') | list) is not all  # when all files exist
+  unarchive:
+    src: "{{ item.url }}"
+    dest: "{{ item.dest }}"
+    creates: "{{ item.files[0] }}"
+    exclude: "{{ item.exclude }}"
+    remote_src: true
+  loop:
+    - url: "{{ ocp_install_binaries_current_config.client_url }}"
+      dest: "{{ ocp_install_binaries_dir }}/"
+      files: [oc, kubectl]
+      exclude: [README.md]
+    - url: "{{ ocp_install_binaries_current_config.installer_url }}"
+      dest: "{{ ocp_install_binaries_dir }}/"
+      files: [openshift-install]
+      exclude: [README.md]
