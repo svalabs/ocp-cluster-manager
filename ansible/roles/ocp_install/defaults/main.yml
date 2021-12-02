@@ -15,6 +15,8 @@ ocp_install_ingress_vip: "{{ ingress_vip | default('10.42.1.10') }}"
 ocp_install_machine_cidr: "{{ machine_cidr | default('10.0.0.0/16') }}"
 ocp_install_clusternetwork_cidr: "{{ clusternetwork_cidr | default('10.128.0.0/14') }}"
 ocp_install_clusternetwork_hostprefix: "{{ clusternetwork_hostprefix | default('23') }}"
+ocp_install_network_type: "{{ network_type | default('OpenShiftSDN') }}"
+ocp_install_service_network: "{{ service_network | default('172.30.0.0/16') }}"
 
 ocp_install_vsphere_vcenter: "{{ vsphere_vcenter | default('vc1.company.corp') }}"
 ocp_install_vsphere_username: "{{ vsphere_username | default('vsphereuser@COMPANY') }}"

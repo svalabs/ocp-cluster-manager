@@ -20,6 +20,9 @@ networking:
   clusterNetwork:
   - cidr: "{{ ocp_install_clusternetwork_cidr }}"
     hostPrefix: {{ ocp_install_clusternetwork_hostprefix }}
+  networkType: "{{ ocp_install_network_type }}"
+  serviceNetwork:
+  - {{ ocp_install_service_network }}
 platform:
   vsphere:
     vcenter: "{{ ocp_install_vsphere_vcenter }}"
