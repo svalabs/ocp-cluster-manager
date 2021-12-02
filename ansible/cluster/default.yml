@@ -27,3 +27,10 @@ vsphere_cluster: NetApp-HCI-Cluster-01
 vsphere_datastore: NetApp-HCI-Datastore-02
 vsphere_foldername: TiaB-MTA  # path below DC, overwrite for each cluster
 vsphere_network: VLAN1003
+
+
+# post-deployment customization
+
+ocp_ntp_chrony_servers: |
+  server 0.fedora.pool.ntp.org iburst
+  server 1.fedora.pool.ntp.org iburst
