@@ -1,0 +1,11 @@
+---
+
+- name: Generate NTP MachineConfig manifest
+  loop: "{{ ocp_ntp_apply_to_roles }}"
+  loop_control:
+    loop_var: mc_role
+  vars:
+    mc_file_content: "{{ lookup('template', 'chrony.conf.j2') }}"
+  k8s:
+    state: present
+    definition: "{{ lookup('template', '99-chrony-configuration.j2') }}"

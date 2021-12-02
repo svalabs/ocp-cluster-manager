@@ -14,3 +14,4 @@
     - env_vars
     - ocp_install_binaries
     - ocp_install
+    - ocp_ntp

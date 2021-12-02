@@ -1,0 +1,11 @@
+---
+
+ocp_ntp_apply_to_roles: [master, worker]  # set to [] to disable NTP configuration
+
+ocp_ntp_chrony_servers: pool 0.rhel.pool.ntp.org iburst
+# for NTP pool:
+#   ocp_ntp_chrony_servers: pool 0.rhel.pool.ntp.org iburst
+# for NTP server:
+#   ocp_ntp_chrony_servers: server ntp.local iburst
+
+ocp_ntp_chrony_conf: null  # set to override default chrony config

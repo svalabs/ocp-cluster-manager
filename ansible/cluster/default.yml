@@ -27,3 +27,9 @@ vsphere_cluster: CL01
 vsphere_datastore: DS01
 vsphere_foldername: OCP-Lab  # path below DC, overwrite for each cluster
 vsphere_network: VLAN1010
+
+# post-deployment customization
+
+ocp_ntp_chrony_servers: |
+  server 0.fedora.pool.ntp.org iburst
+  server 1.fedora.pool.ntp.org iburst
