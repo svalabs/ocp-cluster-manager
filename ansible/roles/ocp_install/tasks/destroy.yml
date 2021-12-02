@@ -1,0 +1,17 @@
+---
+
+- name: Exterminate mankind
+  pause:
+    prompt: >-
+      Please confirm you want to destroy cluster {{ ocp_install_cluster_name }}!
+      Press return to continue. Press Ctrl+c and then "a" to abort
+
+- name: Run openshift-install
+  register: ocp_install_destroy_result
+  command:
+    removes: "{{ ocp_install_install_tmp_dir }}/terraform.tfstate"
+    cmd: "{{ ocp_install_openshift_install_command }} --dir '{{ ocp_install_install_tmp_dir }}' destroy cluster --log-level=info"
+
+- name: Show destroy command output
+  debug:
+    msg: "{{ ocp_install_destroy_result.stdout }}"

@@ -25,10 +25,9 @@
     msg: "You may follow the installation by viewing '{{ ocp_install_install_tmp_dir }}/.openshift_install.log' in another terminal window."
 
 - name: Run openshift-install
-  register: ocp_install_install_result
   command:
     creates: "{{ ocp_install_install_tmp_dir }}/terraform.tfstate"  # prevents redeployment
-    cmd: "{{ ocp_install_install_dir }}/openshift-install --dir '{{ ocp_install_install_tmp_dir }}' create cluster --log-level=info"
+    cmd: "{{ ocp_install_openshift_install_command }} --dir '{{ ocp_install_install_tmp_dir }}' create cluster --log-level=info"
   # to run in background:
   # async: 3600  # 60 minutes timeout
   # poll: 0

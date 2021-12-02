@@ -1,0 +1,17 @@
+---
+- hosts: jump
+  gather_facts: false
+
+  vars_prompt:
+    - name: env_name
+      prompt: What environment do we destroy?
+      private: false
+
+  roles:
+    - env_vars
+
+  tasks:
+    - name: Include destroy tasks from ocp_install role
+      include_role:
+        name: ocp_install
+        tasks_from: destroy
