@@ -25,6 +25,7 @@
     msg: "You may follow the installation by viewing '{{ ocp_install_install_tmp_dir }}/.openshift_install.log' in another terminal window."
 
 - name: Run openshift-install
+  register: ocp_install_deploy_result
   command:
     creates: "{{ ocp_install_install_tmp_dir }}/terraform.tfstate"  # prevents redeployment
     cmd: "{{ ocp_install_openshift_install_command }} --dir '{{ ocp_install_install_tmp_dir }}' create cluster --log-level=info"
@@ -32,9 +33,21 @@
   # async: 3600  # 60 minutes timeout
   # poll: 0
 
-- name: Install new cluster's KUBECONFIG file
-  when: ocp_install_kubeconfig_to_home | bool
-  copy:
-    src: "{{ ocp_install_install_tmp_dir }}/auth/kubeconfig"
-    dest: "{{ lookup('env', 'HOME') }}/.kube/config"
-    mode: '0600'
+- name: Post-installation tasks
+  when: ocp_install_deploy_result.changed
+  block:
+    - name: Install new cluster's KUBECONFIG file
+      when: ocp_install_kubeconfig_to_home | bool
+      copy:
+        src: "{{ ocp_install_install_tmp_dir }}/auth/kubeconfig"
+        dest: "{{ lookup('env', 'HOME') }}/.kube/config"
+        mode: '0600'
+
+    - name: Display deployment info
+      vars:
+        msg_lines: |
+          Password for kubeadmin user: {{ lookup('file', ocp_install_install_tmp_dir + '/auth/kubeadmin-password') }}
+          To view the installation result, run:
+            $ tail {{ ocp_install_install_tmp_dir }}/.openshift_install.log
+      debug:
+        msg: "{{ msg_lines.splitlines() }}"
