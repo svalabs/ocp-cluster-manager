@@ -1,0 +1,29 @@
+---
+
+ocp_variant: okd
+ocp_release: 4.9.0-0.okd-2021-11-28-035710
+
+
+# values for install-config.yaml
+base_domain: tiab.ssc.sva.de
+# cluster_name: changeme
+
+master_count: 3
+worker_count: 2
+
+network_type: OpenShiftSDN
+# api_vip: 10.42.1.9
+# ingress_vip: 10.42.1.10
+machine_cidr: 10.0.0.0/16
+service_network: 172.30.0.0/16
+clusternetwork_cidr: 10.128.0.0/14
+clusternetwork_hostprefix: 23
+
+vsphere_vcenter: 10.100.135.50
+vsphere_username: jasper.wiegratz@lab.sva.de
+# vsphere_password: changeme  # to be set in vars/ocp-secrets.yml, encrypted!
+vsphere_datacenter: NetApp-HCI-Datacenter
+vsphere_cluster: NetApp-HCI-Cluster-01
+vsphere_datastore: NetApp-HCI-Datastore-02
+vsphere_foldername: TiaB-MTA  # path below DC, overwrite for each cluster
+vsphere_network: VLAN1003
