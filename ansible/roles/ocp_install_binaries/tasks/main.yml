@@ -13,7 +13,9 @@
   register: oc_install_version_stdout
 
 - name: Delete openshift-install if outdated
-  when: '"openshift-install " + ocp_install_binaries_ocp_release not in oc_install_version_stdout.stdout'
+  when:
+    - not ansible_check_mode
+    - '"openshift-install " + ocp_install_binaries_ocp_release not in oc_install_version_stdout.stdout'
   file:
     path: "{{ ocp_install_binaries_dir }}/openshift-install"  # noqa var-spacing
     state: absent
