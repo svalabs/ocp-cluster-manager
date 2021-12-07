@@ -25,4 +25,5 @@ check:playbook:
       [ ! -f "${SECRET_FILE}" ] && ansible-vault encrypt --vault-password-file="${PASSWORD_FILE}" \
         "${SECRET_FILE}.example" --output "${SECRET_FILE}"
   script:
+    - ansible-galaxy collection install -r requirements.yml
     - ansible-playbook --check --vault-password-file=vault_password deploy-cluster.yml -e env_name=dev
