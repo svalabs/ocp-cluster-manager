@@ -7,4 +7,4 @@ vsphere_foldername: TiaB-MTA/LAB-4
 
 vsphere_cpi_version: v1.22.2
 vsphere_csi_version: v2.3.0
-vsphere_csi_default_datastore_url: ds:///vmfs/volumes/5ade1c1e-8d8dbf01-c2e1-0cc47ad490f2/ 
+vsphere_csi_default_datastore_url: ds:///vmfs/volumes/5ade1c1e-8d8dbf01-c2e1-0cc47ad490f2/

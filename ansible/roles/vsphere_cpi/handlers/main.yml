@@ -1,7 +1,7 @@
 ---
 
 - name: Taint nodes
-  loop: "{{ lookup('kubernetes.core.k8s', kind='Node') | map(attribute='metadata.name') | list}}"
+  loop: "{{ lookup('kubernetes.core.k8s', kind='Node') | map(attribute='metadata.name') | list }}"  # noqa var-spacing
   kubernetes.core.k8s:
     kind: Node
     name: "{{ item }}"
