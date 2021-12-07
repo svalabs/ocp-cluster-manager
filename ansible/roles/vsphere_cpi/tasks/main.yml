@@ -1,0 +1,25 @@
+---
+
+- name: Install CPI helm chart
+  notify: Taint nodes
+  kubernetes.core.helm:
+    chart_ref: "{{ vsphere_cpi_chart_name }}"
+    chart_version: "{{ vsphere_cpi_chart_version | default(omit) }}"
+    chart_repo_url: "{{ vsphere_cpi_chart_repo }}"
+    update_repo_cache: "{{ vsphere_cpi_chart_refresh }}"  # noqa var-spacing
+    release_name: "{{ vsphere_cpi_release_name }}"
+    release_namespace: "{{ vsphere_cpi_namespace }}"
+    release_state: "{{ vsphere_cpi_state }}"
+    release_values:
+      daemonset:
+        nodeSelector: "{{ vsphere_cpi_ds_nodeselector }}"
+      serviceAccount:
+        name: "{{ vsphere_cpi_serviceaccount_name }}"
+      config:
+        enabled: true
+        vcenter: "{{ vsphere_cpi_vcenter }}"
+        datacenter: "{{ vsphere_cpi_datacenter }}"
+
+        secret:
+          create: false
+          name: vsphere-creds  # reuse openshift secret

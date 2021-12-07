@@ -1,0 +1,13 @@
+---
+
+- name: Taint nodes
+  loop: "{{ lookup('kubernetes.core.k8s', kind='Node') | map(attribute='metadata.name') | list}}"
+  kubernetes.core.k8s:
+    kind: Node
+    name: "{{ item }}"
+    resource_definition:
+      spec:
+        taints:
+          - effect: NoSchedule
+            key: node.cloudprovider.kubernetes.io/uninitialized
+            value: "true"
