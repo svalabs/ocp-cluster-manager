@@ -6,4 +6,4 @@ ingress_vip: 10.1.4.2
 vsphere_foldername: TiaB-MTA/LAB-4
 
 vsphere_cpi_version: v1.22.2
-vsphere_csi_git_version: v2.3.0
+vsphere_csi_version: v2.3.0
