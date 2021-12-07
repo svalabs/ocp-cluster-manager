@@ -1,0 +1,28 @@
+stages:
+  - lint
+  - check
+
+lint:ansible:
+  stage: lint
+  image: quay.io/ansible/toolset
+  script:
+    - ansible-lint ansible/
+
+check:playbook:
+  stage: check
+  image: quay.io/ansible/ansible-runner:stable-2.9-latest
+  variables:
+    ANSIBLE_CONFIG: ansible.cfg
+  before_script:
+    - |
+      cd ansible/
+      PASSWORD_FILE=$PWD/vault_password
+      SECRET_FILE=$PWD/vars/ocp-secrets.yml
+
+      # create password file
+      [ ! -f "${PASSWORD_FILE}" ] && (echo changemepassword > $PASSWORD_FILE)
+      # create secret file from example
+      [ ! -f "${SECRET_FILE}" ] && ansible-vault encrypt --vault-password-file="${PASSWORD_FILE}" \
+        "${SECRET_FILE}.example" --output "${SECRET_FILE}"
+  script:
+    - ansible-playbook --check --vault-password-file=vault_password deploy-cluster.yml -e env_name=dev
