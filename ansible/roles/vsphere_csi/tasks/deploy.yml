@@ -1,0 +1,52 @@
+---
+
+- name: Create vSphere CSI namespace
+  kubernetes.core.k8s:
+    api_version: project.openshift.io/v1
+    kind: Project
+    name: "{{ vsphere_csi_namespace }}"
+    state: present
+
+- name: Create vSphere CSI secret
+  kubernetes.core.k8s:
+    state: present
+    api_version: v1
+    kind: Secret
+    namespace: "{{ vsphere_csi_namespace }}"
+    name: "{{ vsphere_csi_secret_name }}"
+    definition:
+      data:
+        csi-vsphere.conf: "{{ lookup('template', 'csi-vsphere.conf.j2') | b64encode }}"  # noqa var-spacing
+
+- name: Create vCenter certificate bundle directory
+  file:
+    path: "{{ vsphere_csi_certbundle_destination }}"
+    state: directory
+    mode: "0750"
+
+- name: Download vSphere CSI Kubernetes manifests
+  get_url:
+    url: "{{ vsphere_csi_manifest_url }}"
+    dest: "{{ vsphere_csi_tmp_location }}/vsphere-csi-driver.yaml"
+    mode: '0660'
+
+- name: Create SCC for CSI ServiceAccount
+  when: vsphere_csi_scc_assign | bool
+  kubernetes.core.k8s:
+    api_version: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    name: system:openshift:scc:{{ vsphere_csi_scc_to_assign }}
+    resource_definition:
+      roleRef:
+        apiGroup: rbac.authorization.k8s.io
+        kind: ClusterRole
+        name: system:openshift:scc:{{ vsphere_csi_scc_to_assign }}
+      subjects:
+        - kind: ServiceAccount
+          name: "{{ vsphere_csi_scc_serviceaccount }}"  # noqa var-spacing
+          namespace: "{{ vsphere_csi_namespace }}"
+
+- name: Apply vSphere CSI Kubernetes manifests
+  kubernetes.core.k8s:
+    state: present
+    src: "{{ vsphere_csi_tmp_location }}/vsphere-csi-driver.yaml"
