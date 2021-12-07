@@ -15,13 +15,13 @@
 - name: Delete openshift-install if outdated
   when: '"openshift-install " + ocp_install_binaries_ocp_release not in oc_install_version_stdout.stdout'
   file:
-    path: "{{ ocp_install_binaries_dir }}/openshift-install"
+    path: "{{ ocp_install_binaries_dir }}/openshift-install"  # noqa var-spacing
     state: absent
 
 - name: Check if binaries exist
   loop: [oc, openshift-install]
   stat:
-    path: "{{ ocp_install_binaries_dir }}/{{ item }}"
+    path: "{{ ocp_install_binaries_dir }}/{{ item }}"  # noqa var-spacing
   register: oc_install_stat_result
 
 - name: Download binaries
@@ -33,7 +33,7 @@
     exclude: "{{ item.exclude }}"
     remote_src: true
   loop:
-    - url: "{{ ocp_install_binaries_current_config.client_url }}"
+    - url: "{{ ocp_install_binaries_current_config.client_url }}"  # noqa var-spacing
       dest: "{{ ocp_install_binaries_dir }}/"
       files: [oc, kubectl]
       exclude: [README.md]
