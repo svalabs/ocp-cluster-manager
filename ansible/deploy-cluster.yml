@@ -15,3 +15,4 @@
     - ocp_install_binaries
     - ocp_install
     - ocp_ntp
+    - vsphere_cpi
