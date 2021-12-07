@@ -13,6 +13,7 @@
     release_values:
       daemonset:
         nodeSelector: "{{ vsphere_cpi_ds_nodeselector }}"
+        tag: "{{ vsphere_cpi_version }}"
       serviceAccount:
         name: "{{ vsphere_cpi_serviceaccount_name }}"
       config:

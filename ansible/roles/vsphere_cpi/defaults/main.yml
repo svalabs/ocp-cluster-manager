@@ -10,6 +10,7 @@ vsphere_cpi_chart_refresh: false
 
 # values
 
+vsphere_cpi_version: v1.22.2
 vsphere_cpi_ds_nodeselector: '{"node-role.kubernetes.io/master": ""}'
 vsphere_cpi_serviceaccount_name: vsphere-cpi
 vsphere_cpi_vcenter: "{{ vsphere_vcenter | default('vc1.company.corp') }}"
