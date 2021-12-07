@@ -1,0 +1,27 @@
+---
+
+vsphere_csi_tmp_location: "{{ install_dir | default(playbook_dir + '/ocp_install') }}"
+vsphere_csi_certbundle_url: "https://{{ vsphere_csi_vcenter }}/certs/download.zip"
+vsphere_csi_certbundle_destination: "{{ vsphere_csi_tmp_location }}/vsphere-certs"
+
+vsphere_csi_version: v2.3.0
+vsphere_csi_manifest_url: "https://raw.githubusercontent.com/kubernetes-sigs/vsphere-csi-driver/{{ vsphere_csi_version }}\
+  /manifests/vanilla/vsphere-csi-driver.yaml"
+
+vsphere_csi_namespace: vmware-system-csi
+vsphere_csi_secret_name: vsphere-config-secret
+
+vsphere_csi_scc_assign: true
+vsphere_csi_scc_serviceaccount: vsphere-csi-controller
+vsphere_csi_scc_to_assign: privileged
+
+vsphere_csi_vcenter: "{{ vsphere_vcenter | default('vc1.company.corp') }}"
+vsphere_csi_port: "{{ vsphere_port | default(443) }}"
+vsphere_csi_thumbprint: ""
+vsphere_csi_vcenter_insecure: false
+vsphere_csi_username: "{{ vsphere_username | default('vsphereuser@COMPANY') }}"
+vsphere_csi_password: "{{ vsphere_password | default('changeme') }}"
+vsphere_csi_datacenter: "{{ vsphere_datacenter | default('DC1') }}"
+vsphere_csi_cluster_distribution: Openshift
+vsphere_csi_cluster_id: "{{ cluster_id | default(
+  lookup('k8s', api_version='config.openshift.io/v1', kind='Infrastructure', resource_name='cluster').status.infrastructureName) }}"

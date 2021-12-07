@@ -1,0 +1,14 @@
+[Global]
+cluster-id = "{{ vsphere_csi_cluster_id }}"
+cluster-distribution = "{{ vsphere_csi_cluster_distribution }}"
+{% if not (vsphere_csi_vcenter_insecure | bool) %}
+ca-file = "/etc/ssl/certs/vcenter_cacert" # optional, use with insecure-flag set to false
+{% endif %}
+thumbprint = "{{ vsphere_csi_thumbprint }}" # optional, use with insecure-flag set to false without providing ca-file
+
+[VirtualCenter "{{ vsphere_csi_vcenter }}"]
+insecure-flag = "{{ vsphere_csi_vcenter_insecure }}"
+user = "{{ vsphere_csi_username }}"
+password = "{{ vsphere_csi_password }}"
+port = "{{ vsphere_csi_port }}"
+datacenters = "{{ vsphere_csi_datacenter }}"
