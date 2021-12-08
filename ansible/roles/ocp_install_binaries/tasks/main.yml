@@ -5,6 +5,7 @@
     path: "{{ ocp_install_binaries_dir }}"
     state: directory
     mode: 0700
+  check_mode: false
   register: ocp_install_dir_result
 
 - name: Getting version of downloaded openshift-install

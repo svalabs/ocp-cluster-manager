@@ -1,6 +1,7 @@
 ---
 
 - name: Create MinIO Operator namespace
+  check_mode: false
   kubernetes.core.k8s:
     api_version: project.openshift.io/v1
     kind: Project
@@ -8,6 +9,7 @@
     state: present
 
 - name: Create MinIO Tenant namespace
+  check_mode: false
   when: (minio_tenants | length) > 0
   kubernetes.core.k8s:
     api_version: project.openshift.io/v1

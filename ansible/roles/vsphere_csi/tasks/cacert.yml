@@ -1,13 +1,22 @@
 ---
 
+- name: Create vCenter certificate bundle directory
+  check_mode: false
+  file:
+    path: "{{ vsphere_csi_certbundle_destination }}"
+    state: directory
+    mode: "0750"
+
 - name: Download vCenter certificate bundle
   unarchive:
     src: "{{ vsphere_csi_certbundle_url }}"
     dest: "{{ vsphere_csi_certbundle_destination }}"
     creates: "{{ vsphere_csi_certbundle_destination }}/certs/lin"
     remote_src: true
+    validate_certs: "{{ not ansible_check_mode }}"  # disable tls check in check mode
 
 - name: Create vCenter certificate bundle ConfigMap
+  when: not ansible_check_mode
   vars:
     vsphere_csi_cacert_path: "{{ lookup('fileglob', vsphere_csi_certbundle_destination + '/certs/lin/*.0', wantlist=True)[0] }}"  # noqa var-spacing
   kubernetes.core.k8s:
