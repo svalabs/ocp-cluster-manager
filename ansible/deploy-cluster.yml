@@ -18,3 +18,4 @@
     - vsphere_cpi
     - vsphere_csi
     - minio
+    - velero

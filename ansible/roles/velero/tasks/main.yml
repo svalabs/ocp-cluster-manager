@@ -1,0 +1,28 @@
+---
+
+- name: Create Velero namespace
+  kubernetes.core.k8s:
+    api_version: project.openshift.io/v1
+    kind: Project
+    name: "{{ velero_namespace }}"
+    state: present
+
+- name: Deploy Velero Helm Chart
+  kubernetes.core.helm:
+    name: "{{ velero_release_name }}"
+    chart_ref: "{{ velero_chart_ref }}"
+    chart_repo_url: "{{ velero_chart_repo }}"
+    release_namespace: "{{ velero_namespace }}"
+    create_namespace: false
+    release_values:
+      configuration: "{{ velero_configuration }}"
+      credentials: "{{ velero_credentials }}"
+      deployRestic: true
+      schedules: "{{ velero_schedules }}"
+      initContainers:
+        - name: velero-plugin-for-aws
+          image: velero/velero-plugin-for-aws:v1.3.0
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /target
+              name: plugins
