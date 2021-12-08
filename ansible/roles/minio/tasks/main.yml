@@ -1,0 +1,72 @@
+---
+
+- name: Create MinIO Operator namespace
+  kubernetes.core.k8s:
+    api_version: project.openshift.io/v1
+    kind: Project
+    name: "{{ minio_operator_namespace }}"
+    state: present
+
+- name: Create MinIO Tenant namespace
+  when: (minio_tenants | length) > 0
+  kubernetes.core.k8s:
+    api_version: project.openshift.io/v1
+    kind: Project
+    name: "{{ (minio_tenants | first).namespace }}"
+    state: present
+
+- name: Deploy MinIO Operator Helm Chart
+  kubernetes.core.helm:
+    name: "{{ minio_operator_release_name }}"
+    chart_ref: "{{ minio_operator_chart_ref }}"
+    chart_repo_url: "{{ minio_operator_chart_repo }}"
+    release_namespace: "{{ minio_operator_namespace }}"
+    create_namespace: false
+    release_values:
+      tenants: "{{ minio_tenants }}"  # noqa var-spacing
+      console:
+        securityContext: "{{ minio_operator_security_context }}"
+      operator:
+        securityContext: "{{ minio_operator_security_context }}"
+        env:
+          - name: MINIO_OPERATOR_TLS_ENABLE
+            value: "off"
+  vars:
+    minio_operator_id_range: "{{ lookup('k8s', kind='Project', api_version='project.openshift.io/v1', resource_name=minio_operator_namespace)
+      .metadata.annotations['openshift.io/sa.scc.supplemental-groups'].split('/')[0] }}"
+    minio_tenant_id_range: "{{ lookup('k8s', kind='Project', api_version='project.openshift.io/v1', resource_name=minio_tenant_namespace)
+      .metadata.annotations['openshift.io/sa.scc.supplemental-groups'].split('/')[0] }}"
+    minio_operator_security_context: |  # workaround to keep int-types
+          {
+            "runAsUser": {{ minio_operator_id_range }},
+            "runAsGroup": {{ minio_operator_id_range }},
+            "runAsNonRoot": true,
+            "fsGroup": {{ minio_operator_id_range }}
+          }
+    minio_tenant_security_context: |  # workaround to keep int-types
+      {
+        "runAsUser": {{ minio_tenant_id_range }},
+        "runAsGroup": {{ minio_tenant_id_range }},
+        "runAsNonRoot": true,
+        "fsGroup": {{ minio_tenant_id_range }}
+      }
+
+- name: Expose MinIO Operator Console
+  when: minio_operator_console_expose | bool
+  kubernetes.core.k8s:
+    api_version: route.openshift.io/v1
+    kind: Route
+    name: console
+    namespace: "{{ minio_operator_namespace }}"
+    resource_definition:
+      spec:
+        to:
+          kind: Service
+          name: console
+          weight: 100
+        port:
+          targetPort: http
+        tls:
+          termination: edge
+          insecureEdgeTerminationPolicy: Redirect
+        wildcardPolicy: None

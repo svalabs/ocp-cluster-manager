@@ -1,0 +1,28 @@
+---
+
+# Helm Chart: https://github.com/minio/operator/tree/master/helm/minio-operator
+minio_operator_namespace: minio-operator
+minio_operator_chart_ref: minio-operator
+minio_operator_chart_repo: https://operator.min.io/
+minio_operator_release_name: minio-operator
+
+minio_operator_console_expose: true
+
+# only supports one tenant at this time due to securityContext
+minio_tenant_namespace: minio
+minio_tenants:
+  - name: minio
+    namespace: minio
+    pools:
+      - servers: 1
+        volumesPerServer: 4
+        size: 10Gi
+        storageClassName: vsphere-csi
+        securityContext: "{{ minio_tenant_security_context | default({}) }}"  # do not edit
+    secrets:
+      enabled: true
+      name: minio-secret
+      accessKey: "{{ minio_tenant_access_key | default('minio') }}"
+      secretKey: "{{ minio_tenant_secret_key | default('minio123') }}"
+    certificate:
+      requestAutoCert: false

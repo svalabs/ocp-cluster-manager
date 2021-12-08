@@ -17,3 +17,4 @@
     - ocp_ntp
     - vsphere_cpi
     - vsphere_csi
+    - minio
