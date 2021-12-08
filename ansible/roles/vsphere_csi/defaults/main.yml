@@ -12,8 +12,13 @@ vsphere_csi_namespace: vmware-system-csi
 vsphere_csi_secret_name: vsphere-config-secret
 
 vsphere_csi_scc_assign: true
-vsphere_csi_scc_serviceaccount: vsphere-csi-controller
-vsphere_csi_scc_to_assign: privileged
+vsphere_csi_scc:
+  controller:
+    serviceaccount: vsphere-csi-controller
+    scc: privileged
+  node:
+    serviceaccount: vsphere-csi-node
+    scc: privileged
 
 vsphere_csi_vcenter: "{{ vsphere_vcenter | default('vc1.company.corp') }}"
 vsphere_csi_port: "{{ vsphere_port | default(443) }}"
