@@ -1,0 +1,31 @@
+---
+
+# Helm Chart: https://github.com/vmware-tanzu/helm-charts/tree/main/charts/velero
+velero_namespace: velero
+velero_chart_ref: velero
+velero_chart_repo: https://vmware-tanzu.github.io/helm-charts
+velero_release_name: velero
+
+velero_configuration:
+  provider: aws
+  backupStorageLocation:
+    name: minio
+    provider: aws
+    bucket: velero
+    default: true
+    config:
+      region: minio
+      s3ForcePathStyle: true
+      s3Url: http://minio-hl.minio.svc:9000
+  defaultVolumesToRestic: true
+
+velero_credentials:
+  useSecret: true
+  name: velero-creds
+  secretContents:
+    cloud: |
+      [default]
+      aws_access_key_id={{ minio_tenant_access_key | default('minio') }}
+      aws_secret_access_key={{ minio_tenant_secret_key | default('minio123') }}
+
+velero_schedules: {}
