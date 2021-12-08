@@ -28,6 +28,8 @@ vsphere_datastore: DS01
 vsphere_foldername: OCP-Lab  # path below DC, overwrite for each cluster
 vsphere_network: VLAN1010
 
+ocp_additionaltrustbundle: ''
+
 # post-deployment customization
 
 ocp_ntp_chrony_servers: |

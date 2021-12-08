@@ -43,3 +43,9 @@ pullSecret: '{{ ocp_install_pull_secret }}'
 sshKey: '{{ ocp_install_ssh_key }}'
 
 imageContentSources: {{ ocp_install_image_content_sources | to_yaml }}
+
+{% if ocp_install_additionaltrustbundle %}
+additionalTrustBundle: |
+  {{ ocp_install_additionaltrustbundle | indent(2) }}
+{% endif %}
+

@@ -24,3 +24,21 @@
         secret:
           create: false
           name: vsphere-creds  # reuse openshift secret
+
+- name: Patch MachineSets to add taints to new Nodes
+  loop: "{{ lookup('k8s', api_version='machine.openshift.io/v1beta1', kind='MachineSet', namespace='openshift-machine-api', wantlist=true) }}"
+  loop_control:
+    label: "{{ item.metadata.name }}"
+  kubernetes.core.k8s:
+    api_version: "{{ item.apiVersion }}"
+    kind: "{{ item.kind }}"
+    namespace: "{{ item.metadata.namespace }}"
+    name: "{{ item.metadata.name }}"
+    resource_definition:
+      spec:
+        template:
+          spec:
+            taints:
+              - effect: NoSchedule
+                key: node.cloudprovider.kubernetes.io/uninitialized
+                value: "true"
