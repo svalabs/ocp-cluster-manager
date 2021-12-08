@@ -30,20 +30,21 @@
     dest: "{{ vsphere_csi_tmp_location }}/vsphere-csi-driver.yaml"
     mode: '0660'
 
-- name: Create SCC for CSI ServiceAccount
+- name: Create SCC for CSI ServiceAccounts
   when: vsphere_csi_scc_assign | bool
+  loop: "{{ vsphere_csi_scc | dict2items }}"
   kubernetes.core.k8s:
     api_version: rbac.authorization.k8s.io/v1
     kind: ClusterRoleBinding
-    name: system:openshift:scc:{{ vsphere_csi_scc_to_assign }}
+    name: system:openshift:scc:{{ item.value.scc }}
     resource_definition:
       roleRef:
         apiGroup: rbac.authorization.k8s.io
         kind: ClusterRole
-        name: system:openshift:scc:{{ vsphere_csi_scc_to_assign }}
+        name: system:openshift:scc:{{ item.value.scc }}
       subjects:
         - kind: ServiceAccount
-          name: "{{ vsphere_csi_scc_serviceaccount }}"  # noqa var-spacing
+          name: "{{ item.value.serviceaccount }}"
           namespace: "{{ vsphere_csi_namespace }}"
 
 - name: Apply vSphere CSI Kubernetes manifests
