@@ -34,10 +34,10 @@
   # poll: 0
 
 - name: Post-installation tasks
-  when: ocp_install_deploy_result.changed
+  when: ocp_install_deploy_result.changed and not ansible_check_mode
   block:
     - name: Install new cluster's KUBECONFIG file
-      when: ocp_install_kubeconfig_to_home | bool
+      when: (ocp_install_kubeconfig_to_home | bool)
       copy:
         src: "{{ ocp_install_install_tmp_dir }}/auth/kubeconfig"
         dest: "{{ lookup('env', 'HOME') }}/.kube/config"
