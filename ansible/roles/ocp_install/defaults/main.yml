@@ -43,4 +43,5 @@ ocp_install_image_content_sources: "{{ image_content_sources | default([]) }}"
 #   mirrors:
 #   - registry.company.corp/openshift/openshift-release-dev
 
+ocp_install_proxy: "{{ ocp_proxy | default({}) }}"
 ocp_install_additionaltrustbundle: "{{ ocp_additionaltrustbundle | default('') }}"
