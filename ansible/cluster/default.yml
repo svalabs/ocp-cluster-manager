@@ -28,6 +28,7 @@ vsphere_datastore: NetApp-HCI-Datastore-02
 vsphere_foldername: TiaB-MTA  # path below DC, overwrite for each cluster
 vsphere_network: VLAN1003
 
+ocp_additionaltrustbundle: ''
 
 # post-deployment customization
 

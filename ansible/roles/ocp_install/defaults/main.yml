@@ -42,3 +42,5 @@ ocp_install_image_content_sources: "{{ image_content_sources | default([]) }}"
 # - source: quay.io/openshift-release-dev/ocp-release
 #   mirrors:
 #   - registry.company.corp/openshift/openshift-release-dev
+
+ocp_install_additionaltrustbundle: "{{ ocp_additionaltrustbundle | default('') }}"
