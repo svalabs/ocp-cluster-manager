@@ -49,3 +49,4 @@ additionalTrustBundle: |
   {{ ocp_install_additionaltrustbundle | indent(2) }}
 {% endif %}
 
+proxy: {{ ocp_install_proxy | to_yaml }}
