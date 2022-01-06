@@ -20,7 +20,7 @@
 - name: Create vCenter certificate bundle ConfigMap
   when: not ansible_check_mode
   vars:
-    vsphere_csi_cacert_path: "{{ vsphere_csi_certbundle_content | default(lookup('fileglob', vsphere_csi_certbundle_destination + '/certs/lin/*.0', wantlist=True)[0], true) }}"  # noqa var-spacing
+    vsphere_csi_cacert_content: "{{ vsphere_csi_certbundle_content | default(lookup('file', lookup('fileglob', vsphere_csi_certbundle_destination + '/certs/lin/*.0', wantlist=True)[0]), true) }}"  # noqa var-spacing
   kubernetes.core.k8s:
     state: present
     api_version: v1
@@ -29,7 +29,7 @@
     name: "vc-root-ca-cert"
     definition:
       data:
-        cacert: "{{ lookup('file', vsphere_csi_cacert_path) }}"
+        cacert: "{{ vsphere_csi_cacert_content }}"
 
 - name: Assign vCenter certificate to CSI pods
   kubernetes.core.k8s:
