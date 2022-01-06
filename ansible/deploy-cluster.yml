@@ -15,6 +15,7 @@
     - ocp_install_binaries
     - ocp_install
     - ocp_ntp
+    - ocp_proxy
     - vsphere_cpi
     - vsphere_csi
     - minio

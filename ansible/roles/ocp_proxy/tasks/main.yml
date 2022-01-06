@@ -1,0 +1,9 @@
+---
+
+- name: Update cluster proxy settings
+  k8s:
+    api_version: config.openshift.io/v1
+    kind: Proxy
+    name: cluster
+    resource_definition:
+      spec: "{{ ocp_proxy_setting }}"
