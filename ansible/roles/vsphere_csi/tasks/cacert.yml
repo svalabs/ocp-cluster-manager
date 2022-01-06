@@ -43,12 +43,32 @@
                 configMap:
                   name: vc-root-ca-cert
             containers:
-              - name: vsphere-csi-controller
+              - name: csi-attacher
+                volumeMounts:
+                  - mountPath: /etc/ssl/certs/vcenter_cacert
+                    subPath: cacert
+                    name: vc-root-ca-cert
+              - name: csi-resizer
+                volumeMounts:
+                  - mountPath: /etc/ssl/certs/vcenter_cacert
+                    subPath: cacert
+                    name: vc-root-ca-cert
+              - name: liveness-probe
                 volumeMounts:
                   - mountPath: /etc/ssl/certs/vcenter_cacert
                     subPath: cacert
                     name: vc-root-ca-cert
               - name: vsphere-syncer
+                volumeMounts:
+                  - mountPath: /etc/ssl/certs/vcenter_cacert
+                    subPath: cacert
+                    name: vc-root-ca-cert
+              - name: csi-provisioner
+                volumeMounts:
+                  - mountPath: /etc/ssl/certs/vcenter_cacert
+                    subPath: cacert
+                    name: vc-root-ca-cert
+              - name: vsphere-csi-controller
                 volumeMounts:
                   - mountPath: /etc/ssl/certs/vcenter_cacert
                     subPath: cacert

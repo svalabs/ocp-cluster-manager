@@ -24,7 +24,7 @@ vsphere_csi_vcenter: "{{ vsphere_vcenter | default('vc1.company.corp') }}"
 vsphere_csi_port: "{{ vsphere_port | default(443) }}"
 vsphere_csi_thumbprint: ""
 vsphere_csi_vcenter_insecure: false
-vsphere_csi_install_cafile: false
+vsphere_csi_install_cafile: true
 vsphere_csi_username: "{{ vsphere_username | default('vsphereuser@COMPANY') }}"
 vsphere_csi_password: "{{ vsphere_password | default('changeme') }}"
 vsphere_csi_datacenter: "{{ vsphere_datacenter | default('DC1') }}"
