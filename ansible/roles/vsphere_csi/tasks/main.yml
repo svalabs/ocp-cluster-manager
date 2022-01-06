@@ -4,15 +4,15 @@
   include_tasks: deploy.yml
 
 - name: Include tasks to install vSphere CAcert in Kubernetes
-  when: not (vsphere_csi_vcenter_insecure | bool)
+  when: vsphere_csi_install_cafile | bool
   include_tasks: cacert.yml
 
 - name: Create StorageClass
-  loop: "{{ vsphere_csi_storageclasses }}"
+  loop: "{{ vsphere_csi_storageclasses }}"
   loop_control:
     loop_var: csi_sc
   kubernetes.core.k8s:
-    resource_definition: "{{ lookup('template', 'storageclass.yaml.j2') }}"  # noqa var-spacing
+    resource_definition: "{{ lookup('template', 'storageclass.yaml.j2') }}"  # noqa var-spacing
 
 - name: Unmark default StorageClass thin
   when: (vsphere_csi_storageclasses | selectattr('is_default', 'equalto', true) | list | length) > 0
