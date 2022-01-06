@@ -1,7 +1,7 @@
 [Global]
 cluster-id = "{{ vsphere_csi_cluster_id }}"
 cluster-distribution = "{{ vsphere_csi_cluster_distribution }}"
-{% if not (vsphere_csi_vcenter_insecure | bool) %}
+{% if (vsphere_csi_install_cafile | bool) %}
 ca-file = "/etc/ssl/certs/vcenter_cacert" # optional, use with insecure-flag set to false
 {% endif %}
 thumbprint = "{{ vsphere_csi_thumbprint }}" # optional, use with insecure-flag set to false without providing ca-file
