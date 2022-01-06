@@ -3,6 +3,7 @@
 vsphere_csi_tmp_location: "{{ install_dir | default(playbook_dir + '/ocp_install') }}"
 vsphere_csi_certbundle_url: "https://{{ vsphere_csi_vcenter }}/certs/download.zip"
 vsphere_csi_certbundle_destination: "{{ vsphere_csi_tmp_location }}/vsphere-certs"
+vsphere_csi_certbundle_content: false  # set to certificate string to override certbundle content
 
 vsphere_csi_version: v2.3.0
 vsphere_csi_manifest_url: "https://raw.githubusercontent.com/kubernetes-sigs/vsphere-csi-driver/{{ vsphere_csi_version }}\
