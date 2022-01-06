@@ -12,6 +12,7 @@ compute:
 - hyperthreading: Enabled
   name: worker
   replicas: {{ ocp_install_worker_count }}
+  platform: "{{ ocp_install_platform_opts | to_yaml }}
 metadata:
   name: "{{ ocp_install_cluster_name }}"
 networking:

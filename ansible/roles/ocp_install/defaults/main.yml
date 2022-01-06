@@ -13,6 +13,13 @@ ocp_install_cluster_name: "{{ cluster_name | default('devocp') }}"
 
 ocp_install_master_count: "{{ master_count | default('3') }}"
 ocp_install_worker_count: "{{ worker_count | default('4') }}"
+ocp_install_platform_opts: {}
+  # vsphere:
+  #   cpus: 8
+  #   coresPerSocket: 2
+  #   memoryMB: 24576
+  #   osDisk:
+  #     diskSizeGB: 512
 
 ocp_install_api_vip: "{{ api_vip | default('10.42.1.9') }}"
 ocp_install_ingress_vip: "{{ ingress_vip | default('10.42.1.10') }}"
