@@ -1,6 +1,7 @@
 ---
 
 - name: Update cluster proxy settings
+  when: "'httpProxy' in ocp_proxy_setting or 'httpsProxy' in ocp_proxy_setting"
   k8s:
     api_version: config.openshift.io/v1
     kind: Proxy
