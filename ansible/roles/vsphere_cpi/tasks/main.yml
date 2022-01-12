@@ -14,7 +14,7 @@
 - name: Install CPI helm chart
   notify: Taint nodes
   kubernetes.core.helm:
-    chart_ref: "{{ vsphere_cpi_git_dir }}"
+    chart_ref: "{{ vsphere_cpi_git_dir }}/charts/vsphere-cpi"
     chart_version: "{{ vsphere_cpi_chart_version | default(omit) }}"
     release_name: "{{ vsphere_cpi_release_name }}"
     release_namespace: "{{ vsphere_cpi_namespace }}"
