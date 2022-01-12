@@ -7,7 +7,7 @@ vsphere_cpi_namespace: kube-system
 vsphere_cpi_release_name: vsphere-cpi
 vsphere_cpi_chart_repo: https://github.com/kubernetes/cloud-provider-vsphere.git
 vsphere_cpi_chart_name: vsphere-cpi
-vsphere_cpi_chart_version: 1.0.0  # null for latest
+vsphere_cpi_chart_version: null  # null for latest
 vsphere_cpi_chart_refresh: false
 
 # values
