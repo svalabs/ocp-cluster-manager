@@ -12,7 +12,6 @@
     dest: "{{ vsphere_cpi_git_dir }}"
 
 - name: Install CPI helm chart
-  notify: Taint nodes
   kubernetes.core.helm:
     chart_ref: "{{ vsphere_cpi_git_dir }}/charts/vsphere-cpi"
     chart_version: "{{ vsphere_cpi_chart_version | default(omit) }}"
@@ -52,3 +51,18 @@
               - effect: NoSchedule
                 key: node.cloudprovider.kubernetes.io/uninitialized
                 value: "true"
+
+- name: Taint nodes without CPI uninitialized label  # noqa var-spacing
+  loop: "{{ lookup('kubernetes.core.k8s', kind='Node') }}"
+  loop_control:
+    label: "{{ item.metadata.name }}"
+  when: vsphere_cpi_patch_node_taints | bool and 'topology.kubernetes.io/zone' not in item.metadata.labels
+  kubernetes.core.k8s:
+    kind: Node
+    name: "{{ item }}"
+    resource_definition:
+      spec:
+        taints:
+          - effect: NoSchedule
+            key: node.cloudprovider.kubernetes.io/uninitialized
+            value: "true"
