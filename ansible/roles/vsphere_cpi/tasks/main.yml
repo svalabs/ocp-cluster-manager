@@ -35,6 +35,7 @@
           name: vsphere-creds  # reuse openshift secret
 
 - name: Patch MachineSets to add taints to new Nodes
+  when: vsphere_cpi_patch_machineset | bool
   loop: "{{ lookup('k8s', api_version='machine.openshift.io/v1beta1', kind='MachineSet', namespace='openshift-machine-api', wantlist=true) }}"
   loop_control:
     label: "{{ item.metadata.name }}"
