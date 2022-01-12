@@ -11,6 +11,7 @@ vsphere_cpi_chart_version: null  # null for latest
 vsphere_cpi_chart_refresh: false
 
 vsphere_cpi_patch_machineset: false
+vsphere_cpi_patch_node_taints: false
 
 # values
 
