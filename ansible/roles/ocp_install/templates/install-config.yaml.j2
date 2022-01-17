@@ -50,4 +50,6 @@ additionalTrustBundle: |
   {{ ocp_install_additionaltrustbundle | indent(2) }}
 {% endif %}
 
+{% if 'httpProxy' in ocp_proxy_setting or 'httpsProxy' in ocp_proxy_setting %}
 proxy: {{ ocp_install_proxy | to_yaml }}
+{% endif %}
