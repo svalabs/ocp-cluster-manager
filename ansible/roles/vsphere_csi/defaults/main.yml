@@ -30,8 +30,7 @@ vsphere_csi_username: "{{ vsphere_username | default('vsphereuser@COMPANY') }}"
 vsphere_csi_password: "{{ vsphere_password | default('changeme') }}"
 vsphere_csi_datacenter: "{{ vsphere_datacenter | default('DC1') }}"
 vsphere_csi_cluster_distribution: Openshift
-vsphere_csi_cluster_id: "{{ cluster_id | default(
-  lookup('k8s', api_version='config.openshift.io/v1', kind='Infrastructure', resource_name='cluster').status.infrastructureName) }}"
+vsphere_csi_cluster_id: "{{ lookup('k8s', api_version='config.openshift.io/v1', kind='Infrastructure', resource_name='cluster').status.infrastructureName }}"
 
 vsphere_csi_default_datastore_url: "ds:///vmfs/volumes/vsan:52cdfa80721ff516-ea1e993113acfc77/"
 vsphere_csi_storageclasses:
