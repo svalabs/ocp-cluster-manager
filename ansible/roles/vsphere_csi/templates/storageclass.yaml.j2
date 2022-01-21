@@ -3,7 +3,10 @@ apiVersion: storage.k8s.io/v1
 metadata:
   name: "{{ csi_sc.name }}"
   annotations:
-    storageclass.kubernetes.io/is-default-class: "{{ csi_sc.is_default | default(false) | lower }}"
+    storageclass.kubernetes.io/is-default-class: "{{ csi_sc.is_default | default(false) | lower }}"
 provisioner: csi.vsphere.vmware.com
 parameters:
-  datastoreurl: "{{ csi_sc.datastore_url }}"
+  datastoreurl: "{{ csi_sc.datastore_url }}"
+{% if 'reclaim_policy' in csi_sc %}
+reclaimPolicy: "{{ csi_sc.reclaim_policy }}"
+{% endif %}

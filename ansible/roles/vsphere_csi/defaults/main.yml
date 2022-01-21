@@ -37,3 +37,4 @@ vsphere_csi_storageclasses:
   - name: vsphere-csi
     is_default: true
     datastore_url: "{{ vsphere_csi_default_datastore_url }}"
+    reclaim_policy: Retain
