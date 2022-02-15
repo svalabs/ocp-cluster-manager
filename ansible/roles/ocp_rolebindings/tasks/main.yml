@@ -1,0 +1,11 @@
+---
+
+- name: Disable self-provisioner role
+  when: ocp_rolebindings_disable_selfprovisioner | bool
+  kubernetes.core.k8s:
+    state: patched
+    api_version: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    name: self-provisioners
+    definition:
+      subjects: []

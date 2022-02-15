@@ -1,0 +1,3 @@
+---
+
+ocp_rolebindings_disable_selfprovisioner: false
