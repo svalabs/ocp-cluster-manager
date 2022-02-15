@@ -1,0 +1,9 @@
+---
+
+ocp_nodelabels_infraid: "{{
+  lookup('kubernetes.core.k8s', api_version='config.openshift.io/v1', kind='Infrastructure', resource_name='cluster')
+    .status.infrastructureName }}"
+ocp_nodelabels_assign: []
+  # - machineset_name: default_worker  # default_worker is automatically substituted as <infraid>-worker
+  #   labels:
+  #     foo: bar
