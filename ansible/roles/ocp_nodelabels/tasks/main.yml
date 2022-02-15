@@ -1,0 +1,49 @@
+---
+
+- name: Patch MachineSet template labels
+  loop: "{{ ocp_nodelabels_assign }}"
+  loop_control:
+    label: "{{ _ms_name }}"
+  vars:
+    _ms_name: "{{ item.machineset_name | regex_replace('^default_worker$', ocp_nodelabels_infraid + '-worker') }}"
+  kubernetes.core.k8s:
+    state: patched
+    api_version: machine.openshift.io/v1beta1
+    kind: MachineSet
+    name: "{{ _ms_name }}"
+    namespace: openshift-machine-api
+    definition:
+      spec:
+        template:
+          metadata:
+            labels: "{{ item.labels }}"
+
+
+- name: Get MachineSet Nodes
+  loop: "{{ ocp_nodelabels_assign }}"
+  loop_control:
+    label: "{{ _ms_name }}"
+  vars:
+    _ms_name: "{{ item.machineset_name | regex_replace('^default_worker$', ocp_nodelabels_infraid + '-worker') }}"
+  set_fact:
+    _ms_nodes: "{{ _ms_nodes | default({}) | combine({
+        item.machineset_name: lookup('kubernetes.core.k8s', kind='Machine', api_version='machine.openshift.io/v1beta1',
+          label_selector='machine.openshift.io/cluster-api-machineset=' + _ms_name) | map(attribute='metadata.name') | list
+      }) }}"
+
+- name: Set Node labels
+  loop: "{{ _ms_nodes | default({}) | dict2items | subelements('value') }}"
+  loop_control:
+    label: "{{ _node }}"
+  vars:
+    _ms_name: "{{ item.0.key }}"
+    _node: "{{ item.1 }}"
+    _labels: "{{ (ocp_nodelabels_assign | selectattr('machineset_name', 'eq', _ms_name) | first).labels }}"
+  kubernetes.core.k8s:
+    state: patched
+    api_version: v1
+    kind: Node
+    name: "{{ _node }}"
+    definition:
+      metadata:
+        labels: "{{ _labels }}"
