@@ -18,6 +18,9 @@
       configuration: "{{ velero_configuration }}"
       credentials: "{{ velero_credentials }}"
       deployRestic: true
+      restic:
+        podVolumePath: /var/lib/kubelet/pods
+        privileged: true
       schedules: "{{ velero_schedules }}"
       initContainers:
         - name: velero-plugin-for-aws
