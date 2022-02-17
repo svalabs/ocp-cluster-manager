@@ -1,0 +1,47 @@
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
+metadata:
+  labels:
+    machine.openshift.io/cluster-api-cluster: {{ ocp_infranodes_infraid }}
+  name: {{ _ms_name }}
+  namespace: openshift-machine-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: {{ ocp_infranodes_infraid }} 
+      machine.openshift.io/cluster-api-machineset: {{ _ms_name }}
+  template:
+    metadata:
+      labels:
+        machine.openshift.io/cluster-api-cluster: {{ ocp_infranodes_infraid }} 
+        machine.openshift.io/cluster-api-machine-role: infra
+        machine.openshift.io/cluster-api-machine-type: worker
+        machine.openshift.io/cluster-api-machineset: {{ _ms_name }}
+    spec:
+      metadata:
+        labels:
+          node-role.kubernetes.io/infra: ""
+      taints:
+      - effect: NoSchedule
+        key: infra
+        value: reserved
+      - effect: NoExecute
+        key: infra
+        value: reserved
+      providerSpec:
+        value:
+          numCPUs: {{ ocp_infranodes_spec.numCPUs }}
+          numCoresPerSocket: {{ ocp_infranodes_spec.numCoresPerSocket }}
+          diskGiB: {{ ocp_infranodes_spec.diskGiB }}
+          memoryMiB: {{ ocp_infranodes_spec.memoryMiB }}
+          credentialsSecret:
+            name: vsphere-cloud-credentials
+          network:
+            devices: {{ ocp_infranodes_spec.networkDevices }}
+          metadata:
+            creationTimestamp: null
+          kind: VSphereMachineProviderSpec
+          workspace: {{ ocp_infranodes_workspace }}
+          template: {{ ocp_infranodes_vmtemplate }}
+          apiVersion: vsphereprovider.openshift.io/v1beta1
