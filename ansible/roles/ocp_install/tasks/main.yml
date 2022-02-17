@@ -51,3 +51,25 @@
             $ tail {{ ocp_install_install_tmp_dir }}/.openshift_install.log
       debug:
         msg: "{{ msg_lines.splitlines() }}"
+
+
+- name: Set worker MachineSet resource pool
+  when: vsphere_resourcepool != None
+  vars:
+    _infraid: "{{
+      lookup('kubernetes.core.k8s', api_version='config.openshift.io/v1', kind='Infrastructure', resource_name='cluster')
+        .status.infrastructureName }}"
+  kubernetes.core.k8s:
+    state: patched
+    api_version: machine.openshift.io/v1beta1
+    kind: MachineSet
+    namespace: openshift-machine-api
+    name: "{{ _infraid }}-worker"
+    definition:
+      spec:
+        template:
+          spec:
+            providerSpec:
+              value:
+                workspace:
+                  resourcePool: "{{ vsphere_resourcepool }}"
