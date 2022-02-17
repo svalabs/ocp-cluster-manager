@@ -1,6 +1,8 @@
 ---
 
 ocp_infranodes_enabled: false
+ocp_infranodes_move_ingress: true
+ocp_infranodes_move_monitoring: true
 
 ocp_infranodes_minreplicas: 2
 ocp_infranodes_spec:
@@ -14,7 +16,7 @@ ocp_infranodes_workspace:
   datacenter: "{{ vsphere_datacenter }}"
   datastore: "{{ vsphere_datastore }}"
   folder: "{{ vsphere_folder | default('/' + vsphere_datacenter + '/vm/'+ vsphere_foldername + '/') }}"
-  # resourcePool:
+  resourcePool: "{{ vsphere_resourcepool | default('') }}"
   server: "{{ vsphere_vcenter }}"
 ocp_infranodes_vmtemplate: "{{ ocp_infranodes_infraid }}-rhcos"
 

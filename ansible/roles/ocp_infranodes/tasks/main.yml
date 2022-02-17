@@ -26,3 +26,31 @@
         definition:
           spec:
             replicas: 2
+
+    - name: Move IngressController to Infranodes
+      when: ocp_infranodes_move_ingress | bool
+      kubernetes.core.k8s:
+        state: patched
+        api_version: operator.openshift.io/v1
+        kind: IngressController
+        namespace: openshift-ingress-operator
+        name: default
+        definition:
+          spec:
+            nodePlacement:
+              nodeSelector:
+                matchLabels:
+                  node-role.kubernetes.io/infra: ""
+              tolerations:
+                - effect: NoSchedule
+                  key: infra
+                  value: reserved
+                - effect: NoExecute
+                  key: infra
+                  value: reserved
+
+    - name: Move Monitoring to Infranodes
+      when: ocp_infranodes_move_monitoring | bool
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ lookup('template', 'cm_move_monitoring.yml.j2') | from_yaml }}"
