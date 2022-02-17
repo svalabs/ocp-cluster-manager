@@ -1,0 +1,26 @@
+---
+
+ocp_infranodes_enabled: false
+ocp_infranodes_move_ingress: true
+ocp_infranodes_move_monitoring: true
+
+ocp_infranodes_minreplicas: 2
+ocp_infranodes_spec:
+  numCPUs: 4
+  numCoresPerSocket: 2
+  diskGiB: 120
+  memoryMiB: 8192
+  networkDevices:
+    - networkName: "{{ vsphere_network }}"
+ocp_infranodes_workspace:
+  datacenter: "{{ vsphere_datacenter }}"
+  datastore: "{{ vsphere_datastore }}"
+  folder: "{{ vsphere_folder | default('/' + vsphere_datacenter + '/vm/'+ vsphere_foldername + '/') }}"
+  resourcePool: "{{ vsphere_resourcepool | default('') }}"
+  server: "{{ vsphere_vcenter }}"
+ocp_infranodes_vmtemplate: "{{ ocp_infranodes_infraid }}-rhcos"
+
+ocp_infranodes_zones: [main]
+ocp_infranodes_infraid: "{{
+  lookup('kubernetes.core.k8s', api_version='config.openshift.io/v1', kind='Infrastructure', resource_name='cluster')
+    .status.infrastructureName }}"

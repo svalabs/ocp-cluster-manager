@@ -16,6 +16,7 @@
     - ocp_install
     - ocp_nodelabels
     - ocp_rolebindings
+    - ocp_infranodes
     - ocp_ntp
     - ocp_proxy
     - vsphere_cpi

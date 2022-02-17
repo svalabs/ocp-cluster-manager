@@ -1,0 +1,56 @@
+---
+
+- when: ocp_infranodes_enabled | bool
+  block:
+    - name: Create Infranodes MachineSet
+      loop: "{{ ocp_infranodes_zones }}"
+      vars:
+        _ms_name: "{{ ocp_infranodes_infraid }}-infra-{{ item }}"
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ lookup('template', 'machineset.yml.j2') | from_yaml }}"
+
+    - name: Set MachineSet replicas
+      loop: "{{ ocp_infranodes_zones }}"
+      vars:
+        _ms_name: "{{ ocp_infranodes_infraid }}-infra-{{ item }}"
+        _ms_status: "{{ lookup('k8s', api_version='machine.openshift.io/v1beta1', kind='MachineSet',
+          namespace='openshift-machine-api', resource_name=_ms_name) }}"
+      when: _ms_status.spec.replicas < ocp_infranodes_minreplicas
+      kubernetes.core.k8s:
+        state: present
+        api_version: machine.openshift.io/v1beta1
+        kind: MachineSet
+        namespace: openshift-machine-api
+        name: "{{ _ms_name }}"
+        definition:
+          spec:
+            replicas: 2
+
+    - name: Move IngressController to Infranodes
+      when: ocp_infranodes_move_ingress | bool
+      kubernetes.core.k8s:
+        state: patched
+        api_version: operator.openshift.io/v1
+        kind: IngressController
+        namespace: openshift-ingress-operator
+        name: default
+        definition:
+          spec:
+            nodePlacement:
+              nodeSelector:
+                matchLabels:
+                  node-role.kubernetes.io/infra: ""
+              tolerations:
+                - effect: NoSchedule
+                  key: infra
+                  value: reserved
+                - effect: NoExecute
+                  key: infra
+                  value: reserved
+
+    - name: Move Monitoring to Infranodes
+      when: ocp_infranodes_move_monitoring | bool
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ lookup('template', 'cm_move_monitoring.yml.j2') | from_yaml }}"
